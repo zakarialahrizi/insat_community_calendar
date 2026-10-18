@@ -1,29 +1,43 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import request from 'supertest';
-import { App } from 'supertest/types';
-import { AppModule } from './../src/app.module';
+import { Test } from '@nestjs/testing';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
+import request from 'supertest'
+import { AppModule } from '../src/app.module';
 
-describe('AppController (e2e)', () => {
-  let app: INestApplication<App>;
+describe('Reservations (e2e)', () => {
+  let app: INestApplication;
 
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
+  beforeAll(async () => {
+    process.env.NODE_ENV = 'test';
+    const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
+    app = moduleRef.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+    app.setGlobalPrefix('api');
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  afterAll(async () => { await app.close(); });
+
+  it('POST /api/reservations -> 201', () => {
     return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+      .post('/api/reservations')
+      .send({
+        nomResponsable: 'Ali', email: 'ali@test.tn',
+        date: '2030-01-10', heureDebut: '09:00', heureFin: '10:00',
+      })
+      .expect(201)
+      .expect((res) => {
+        expect(res.body.statut).toBe('EN_ATTENTE');
+        expect(res.body.id).toBeDefined();
+      });
   });
 
-  afterEach(async () => {
-    await app.close();
+  it('POST avec heures incohérentes -> 400', () => {
+    return request(app.getHttpServer())
+      .post('/api/reservations')
+      .send({
+        nomResponsable: 'Ali', email: 'ali@test.tn',
+        date: '2030-01-10', heureDebut: '10:00', heureFin: '09:00',
+      })
+      .expect(400);
   });
 });
