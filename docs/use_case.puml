@@ -1,0 +1,44 @@
+@startuml
+left to right direction
+
+actor "Élève" as Eleve
+actor "Responsable" as Responsable
+actor "Visiteur" as Visiteur
+actor "Google Calendar" as GoogleCalendar
+
+rectangle " " {
+    usecase "Traitement réclamation" as UC1
+    usecase "Traitement réservation" as UC2
+    usecase "Envoie une notification" as UC3
+    usecase "Création de compte" as UC4
+    usecase "Authentification" as UC5
+
+    usecase "Faire réservation" as UC6
+    usecase "Modifier réservation" as UC7
+    usecase "Vérifier statut" as UC8
+    usecase "Faire réclamation" as UC9
+
+    usecase "Consulter calendrier" as UC10
+    usecase "Demander notification" as UC11
+    usecase "Ajouter événement au\ncalendrier personnel" as UC12
+
+    Eleve -- UC1
+    Eleve -- UC2
+    Eleve -- UC4
+    Eleve -- UC5
+
+    UC1 ..> UC3 : <<include>>
+    UC2 ..> UC3 : <<include>>
+
+    Responsable -- UC6
+    Responsable -- UC7
+    Responsable -- UC8
+    Responsable -- UC9
+
+    Visiteur -- UC10
+    Visiteur -- UC11
+
+    UC12 ..> UC10 : <<extend>>
+    GoogleCalendar -- UC12
+}
+@enduml
