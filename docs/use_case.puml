@@ -1,16 +1,16 @@
 @startuml
 left to right direction
 
-actor "Élève" as Eleve
+actor "DVURE" as DVURE
 actor "Responsable" as Responsable
 actor "Visiteur" as Visiteur
 actor "Google Calendar" as GoogleCalendar
 
 rectangle " " {
-    usecase "Traitement réclamation" as UC1
-    usecase "Traitement réservation" as UC2
-    usecase "Envoie une notification" as UC3
-    usecase "Création de compte" as UC4
+    usecase "Traiter réclamation" as UC1
+    usecase "Traiter réservation" as UC2
+    usecase "Envoyer une notification" as UC3
+    usecase "Créer de compte" as UC4
     usecase "Authentification" as UC5
 
     usecase "Faire réservation" as UC6
@@ -22,10 +22,10 @@ rectangle " " {
     usecase "Demander notification" as UC11
     usecase "Ajouter événement au\ncalendrier personnel" as UC12
 
-    Eleve -- UC1
-    Eleve -- UC2
-    Eleve -- UC4
-    Eleve -- UC5
+    DVURE -- UC1
+    DVURE -- UC2
+    DVURE -- UC4
+    DVURE -- UC5
 
     UC1 ..> UC3 : <<include>>
     UC2 ..> UC3 : <<include>>
